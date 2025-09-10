@@ -1,0 +1,63 @@
+/* style.css - estilo separado */
+
+* { box-sizing: border-box; }
+html,body { height: 100%; margin: 0; font-family: Arial, Helvetica, sans-serif; }
+
+/* Capas de fondo para crossfade */
+.bg-layer {
+  position: fixed; inset: 0; z-index: 0;
+  background-position: center; background-size: cover; background-repeat: no-repeat;
+  opacity: 0; transition: opacity 0.8s ease-in-out;
+}
+.bg-layer.visible { opacity: 1; }
+
+/* Contenedor del formulario */
+.form-wrapper {
+  position: relative; z-index: 10;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh; padding: 20px;
+}
+
+/* caja del formulario (transparente) */
+.form-container {
+  width: 420px; max-width: 96%;
+  background: rgba(255,255,255,0.72);
+  padding: 24px; border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+  text-align: left;
+}
+
+/* header */
+.form-container h2 {
+  margin: 0 0 12px; color: #0b3b5a; text-align: center;
+}
+
+/* pasos */
+.form-step { display: none; }
+.form-step.active { display: block; }
+
+/* campos */
+label { display: block; margin: 10px 0 6px; font-weight: 600; }
+input, select {
+  width: 100%; padding: 10px 12px; margin-bottom: 8px;
+  border-radius: 8px; border: 1px solid #d0d0d0; font-size: 15px;
+}
+select[multiple] { height: 110px; }
+
+/* botones y acciones */
+.actions, .row { display: flex; gap: 10px; justify-content: center; margin-top: 12px; }
+.btn {
+  padding: 10px 16px; border-radius: 8px; border: none;
+  background: #0b5f4e; color: #fff; font-weight: 700; cursor: pointer;
+}
+.btn:disabled { background: #9aa1a0; cursor: not-allowed; }
+
+/* mensajes */
+#matriculaDisplay { margin-top: 10px; font-weight: 700; color: #0b3b5a; text-align:center; }
+#mensajeCarga { margin-top: 10px; font-weight: 700; color: #1a73e8; text-align:center; }
+
+/* responsive */
+@media (max-width: 480px) {
+  .form-container { padding: 18px; }
+  .btn { padding: 10px; font-size: 14px; }
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subir PDF a Cloudinary</title>
+</head>
+<body>
+  <h2>Subir PDF a Cloudinary</h2>
+
+  <input type="file" id="fileInput" accept="application/pdf">
+  <button onclick="uploadPDF()">Subir PDF</button>
+
+  <p id="status"></p>
+  <a id="pdfLink" target="_blank"></a>
+
+  <script>
+    async function uploadPDF() {
+      const fileInput = document.getElementById('fileInput');
+      const status = document.getElementById('status');
+      const pdfLink = document.getElementById('pdfLink');
+
+      if (!fileInput.files.length) {
+        alert("Por favor selecciona un archivo PDF");
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const formData = new FormData();
+
+      const cloudName = "dwmbolvcs";  
+      const uploadPreset = "unsigned_pdfs"; // 👈 asegúrate que coincide EXACTO con el creado
+
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+
+      status.textContent = "Subiendo PDF...";
+
+      try {
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`, // 👈 IMPORTANTE: usar raw
+          {
+            method: "POST",
+            body: formData
+          }
+        );
+
+        const data = await response.json();
+
+        if (data.secure_url) {
+          status.textContent = "✅ PDF subido con éxito";
+          pdfLink.href = data.secure_url;
+          pdfLink.textContent = "Abrir PDF en la nube";
+        } else {
+          status.textContent = "❌ Error al subir el PDF";
+          console.error(data);
+        }
+      } catch (error) {
+        status.textContent = "❌ Error en la conexión";
+        console.error(error);
+      }
+    }
+  </script>
+</body>
+</html>

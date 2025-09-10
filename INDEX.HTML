@@ -1,0 +1,238 @@
+<!-- registro.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Registro Pre-Facultativo</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url('IMG/1M.jpeg');
+    background-size: cover;
+    transition: background 0.5s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .form-step {
+    background: rgba(255, 255, 255, 0.41);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    display: none;
+    width: 400px;
+    text-align: center;
+  }
+
+  .form-step.active {
+    display: block;
+  }
+
+  input, select, button {
+    width: 90%;
+    padding: 10px;
+    margin: 10px auto;
+    font-size: 16px;
+    display: block;
+  }
+
+  button {
+    background: #4CAF50;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+
+  button:hover {
+    background: #45a049;
+  }
+
+  label {
+    font-weight: bold;
+  }
+
+  #matriculaDisplay, #mensajeCarga {
+    margin-top: 15px;
+    font-weight: bold;
+  }
+
+  #mensajeCarga a {
+    color: blue;
+    text-decoration: underline;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <form id="formulario">
+
+    <!-- Paso 1 -->
+    <div class="form-step active">
+      <input type="text" id="apellidoPaterno" placeholder="Apellido Paterno" required>
+      <input type="text" id="apellidoMaterno" placeholder="Apellido Materno" required>
+      <input type="text" id="nombres" placeholder="Nombres" required>
+      <button type="button" onclick="nextStep(1)">Siguiente</button>
+    </div>
+
+    <!-- Paso 2 -->
+    <div class="form-step">
+      <input type="text" id="ci" placeholder="C.I." required>
+      <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+      <input type="date" id="fechaNacimiento" required>
+      <input type="number" id="edad" placeholder="Edad" required>
+      <button type="button" onclick="nextStep(2)">Siguiente</button>
+    </div>
+
+    <!-- Paso 3 -->
+    <div class="form-step">
+      <label>Lugar de Nacimiento:</label>
+      <select id="lugarNacimiento" multiple required>
+        <option value="La Paz">La Paz</option>
+        <option value="Cochabamba">Cochabamba</option>
+        <option value="Santa Cruz">Santa Cruz</option>
+        <option value="Oruro">Oruro</option>
+        <option value="Potosí">Potosí</option>
+        <option value="Tarija">Tarija</option>
+        <option value="Chuquisaca">Chuquisaca</option>
+        <option value="Beni">Beni</option>
+        <option value="Pando">Pando</option>
+      </select>
+
+      <label>Lugar de Residencia:</label>
+      <select id="lugarResidencia" multiple required>
+        <option value="La Paz">La Paz</option>
+        <option value="Cochabamba">Cochabamba</option>
+        <option value="Santa Cruz">Santa Cruz</option>
+        <option value="Oruro">Oruro</option>
+        <option value="Potosí">Potosí</option>
+        <option value="Tarija">Tarija</option>
+        <option value="Chuquisaca">Chuquisaca</option>
+        <option value="Beni">Beni</option>
+        <option value="Pando">Pando</option>
+      </select>
+
+      <button type="button" onclick="nextStep(3)">Siguiente</button>
+    </div>
+
+    <!-- Paso 4 -->
+    <div class="form-step">
+      <input type="text" id="celular" placeholder="Número de Celular" required>
+      <label for="boucher">Subir Boucher (PDF):</label>
+      <input type="file" id="boucher" accept="application/pdf" required>
+      <button type="button" id="btnGenerar" onclick="generarMatricula()">Generar Matrícula</button>
+
+      <div id="matriculaDisplay"></div>
+      <button type="button" id="btnSubir" onclick="subirDatos()">Subir Datos</button>
+      <div id="mensajeCarga"></div>
+    </div>
+
+  </form>
+</div>
+
+<input type="hidden" id="matricula">
+
+<script>
+const fondos = ["IMG/1M.jpeg","IMG/2M.jpeg","IMG/3M.jpeg","IMG/4M.jpeg"];
+let fondoIndex = 0;
+
+function nextStep(current){
+  const steps = document.querySelectorAll('.form-step');
+  const currentStep = steps[current-1];
+
+  // Validación
+  const inputs = currentStep.querySelectorAll('input, select');
+  let allFilled = true;
+  inputs.forEach(input=>{
+    if(input.type==="file" && input.files.length===0) allFilled=false;
+    else if(input.value===""||input.value===null) allFilled=false;
+    if(input.multiple && input.selectedOptions.length===0) allFilled=false;
+  });
+
+  if(!allFilled){
+    alert('⚠️ Completa todos los campos antes de continuar.');
+    return;
+  }
+
+  // Avanzar paso
+  currentStep.classList.remove('active');
+  steps[current].classList.add('active');
+
+  // Cambiar fondo
+  fondoIndex = (fondoIndex +1) % fondos.length;
+  document.body.style.backgroundImage = `url('${fondos[fondoIndex]}')`;
+  document.body.style.backgroundSize = "cover";
+  document.body.style.backgroundPosition = "center";
+  document.body.style.backgroundRepeat = "no-repeat";
+}
+
+function generarMatricula(){
+  const apellido = document.getElementById('apellidoPaterno').value.trim();
+  const ci = document.getElementById('ci').value.trim();
+  if(apellido && ci.length>=4){
+    const matricula = apellido.charAt(0).toUpperCase() + '-' + ci.slice(-4);
+    document.getElementById('matriculaDisplay').innerText = 'Matrícula: ' + matricula;
+    document.getElementById('matricula').value = matricula;
+  } else {
+    alert('Completa Apellido Paterno y C.I. correctamente.');
+  }
+}
+
+function subirDatos(){
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaZHrDc3cHlhpXw81mBfTBiN-4W6TV1rUn4WgvP8gfQ5CivDBxo1rQWcJTyJjvTcPI6Q/exec"; // Reemplaza con tu URL de Apps Script
+
+  const btnSubir = document.getElementById('btnSubir');
+  btnSubir.style.display = 'none';
+  document.getElementById('mensajeCarga').innerText = '⏳ Cargando datos...';
+
+  const fechaActual = new Date().toISOString().slice(0,10);
+  const formData = new FormData();
+  formData.append('apellidoPaterno', document.getElementById('apellidoPaterno').value);
+  formData.append('apellidoMaterno', document.getElementById('apellidoMaterno').value);
+  formData.append('nombres', document.getElementById('nombres').value);
+  formData.append('ci', document.getElementById('ci').value);
+  formData.append('fechaNacimiento', document.getElementById('fechaNacimiento').value);
+  formData.append('edad', document.getElementById('edad').value);
+  formData.append('lugarNacimiento', Array.from(document.getElementById('lugarNacimiento').selectedOptions).map(o=>o.value).join(', '));
+  formData.append('lugarResidencia', Array.from(document.getElementById('lugarResidencia').selectedOptions).map(o=>o.value).join(', '));
+  formData.append('celular', document.getElementById('celular').value);
+  formData.append('matricula', document.getElementById('matricula').value);
+  formData.append('boucher', document.getElementById('boucher').files[0]);
+  formData.append('fechaInscripcion', fechaActual);
+
+  fetch(SCRIPT_URL,{
+    method: 'POST',
+    body: formData
+  })
+  .then(response=>response.json())
+  .then(data=>{
+    if(data.status==="OK"){
+      document.getElementById('mensajeCarga').innerHTML = 
+        '✅ Datos enviados correctamente<br>📂 <a href="'+data.link+'" target="_blank">Ver Boucher</a>';
+    } else {
+      document.getElementById('mensajeCarga').innerText = '❌ Error: '+data.message;
+      btnSubir.style.display='block';
+    }
+  })
+  .catch(err=>{
+    document.getElementById('mensajeCarga').innerText = '❌ Error al enviar los datos';
+    btnSubir.style.display='block';
+    console.error(err);
+  });
+}
+</script>
+</body>
+</html>
