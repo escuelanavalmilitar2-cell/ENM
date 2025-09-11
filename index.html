@@ -3,22 +3,35 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Página Inicial</title>
 <style>
   html, body {
     margin: 0;
     height: 100%;
-    overflow: hidden;
+    width: 100%;
   }
   body {
-    background: url("IMG/ESCULA\ NAVAL\ MILITAR\ PRE-FACULTATIVO.jpg") no-repeat center center fixed;
-    background-size: cover;
+    background: url("IMG/ESCULA NAVAL MILITAR PRE-FACULTATIVO.jpg") no-repeat center center;
+    background-size: cover; /* hace que se ajuste en cualquier pantalla */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
+  }
+
+  /* Para celulares */
+  @media (max-width: 768px) {
+    body {
+      background-attachment: scroll; /* evita que se corte en móviles */
+      background-position: center top;
+    }
   }
 </style>
 </head>
-<body onclick=window.location.href="registr.html";>
+<body onclick="window.location.href='registr.html';">
 </body>
 </html>
+
 
 
