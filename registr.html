@@ -3,76 +3,106 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Registro Pre-Facultativo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro Pre-Facultativo Naval</title>
 <style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: url('IMG/1M.jpeg');
-    background-size: cover;
-    transition: background 0.5s ease;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    font-family: 'Segoe UI', sans-serif;
     min-height: 100vh;
-  }
-
-  .container {
-    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: url('IMG/1M.jpeg') center/cover no-repeat;
+    transition: background 0.5s ease;
     padding: 20px;
   }
-
+  .container {
+    width: 100%;
+    max-width: 500px;
+  }
   .form-step {
-    background: rgba(255, 255, 255, 0.41);
-    padding: 30px;
+    background: rgba(255, 255, 255, 0.93);
+    padding: 25px;
     border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
     display: none;
-    width: 400px;
     text-align: center;
+    width: 100%;
+    animation: fadeIn 0.5s ease-in-out;
   }
-
-  .form-step.active {
-    display: block;
-  }
-
+  .form-step.active { display: block; }
+  @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
   input, select, button {
-    width: 90%;
-    padding: 10px;
-    margin: 10px auto;
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
     font-size: 16px;
-    display: block;
+    border: 1px solid #bbb;
+    border-radius: 8px;
   }
-
+  input:focus, select:focus {
+    outline: none;
+    border-color: #004080;
+    box-shadow: 0 0 5px rgba(0,64,128,0.5);
+  }
+  select[multiple] { height: 120px; }
   button {
-    background: #4CAF50;
+    background: #004080;
     border: none;
     color: white;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 8px;
     font-weight: bold;
+    transition: background 0.3s;
   }
-
-  button:hover {
-    background: #45a049;
-  }
-
+  button:hover { background: #003366; }
   label {
     font-weight: bold;
+    display: block;
+    margin-top: 10px;
+    text-align: left;
+    color: #222;
   }
-
-  #matriculaDisplay, #mensajeCarga {
+  small {
+    display: block;
+    text-align: left;
+    color: #555;
+    margin-bottom: 5px;
+    font-size: 13px;
+  }
+  #matriculaDisplay {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 22px;
+    color: #b22222;
+    background: rgba(255,255,255,0.8);
+    padding: 12px;
+    border-radius: 10px;
+  }
+  #mensajeCarga {
+    margin-top: 20px;
+    font-size: 15px;
+    display: none;
+    background: rgba(255,255,255,0.8);
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+  }
+  #mensajeCarga a { color: #004080; text-decoration: underline; font-weight: bold; }
+  #errorMatricula {
     margin-top: 15px;
+    display: none;
+    background: rgba(255, 100, 100, 0.2);
+    color: #b22222;
+    padding: 10px;
+    border-radius: 8px;
     font-weight: bold;
   }
-
-  #mensajeCarga a {
-    color: blue;
-    text-decoration: underline;
+  @media(max-width: 500px){
+    .form-step { padding: 20px; }
+    input, select, button { font-size: 14px; padding: 10px; }
+    #matriculaDisplay { font-size: 20px; padding: 10px; }
   }
 </style>
 </head>
@@ -82,64 +112,86 @@
 
     <!-- Paso 1 -->
     <div class="form-step active">
-      <input type="text" id="apellidoPaterno" placeholder="Apellido Paterno" required>
-      <input type="text" id="apellidoMaterno" placeholder="Apellido Materno" required>
-      <input type="text" id="nombres" placeholder="Nombres" required>
-      <button type="button" onclick="nextStep(1)">Siguiente</button>
+      <h2>📝 Paso 1: Datos Personales</h2>
+      <label for="apellidoPaterno">Apellido Paterno</label>
+      <input type="text" id="apellidoPaterno" placeholder="Ej: Pérez" required>
+      <small>Ingrese su apellido paterno tal como figura en su documento de identidad.</small>
+
+      <label for="apellidoMaterno">Apellido Materno</label>
+      <input type="text" id="apellidoMaterno" placeholder="Ej: López" required>
+      <small>Ingrese su apellido materno completo.</small>
+
+      <label for="nombres">Nombres</label>
+      <input type="text" id="nombres" placeholder="Ej: Juan Carlos" required>
+      <small>Escriba todos sus nombres según su C.I.</small>
+
+      <button type="button" onclick="nextStep(1)">➡️ Siguiente</button>
     </div>
 
     <!-- Paso 2 -->
     <div class="form-step">
-      <input type="text" id="ci" placeholder="C.I." required>
-      <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+      <h2>📄 Paso 2: Documento</h2>
+      <label for="ci">Cédula de Identidad</label>
+      <input type="text" id="ci" placeholder="Ej: 1234567" required>
+      <small>Digite su número de carnet de identidad sin guiones ni espacios.</small>
+
+      <label for="fechaNacimiento">Fecha de Nacimiento</label>
       <input type="date" id="fechaNacimiento" required>
-      <input type="number" id="edad" placeholder="Edad" required>
-      <button type="button" onclick="nextStep(2)">Siguiente</button>
+      <small>Seleccione su fecha exacta de nacimiento.</small>
+
+      <label for="edad">Edad</label>
+      <input type="number" id="edad" placeholder="Ej: 18" required>
+      <small>Ingrese su edad en números enteros.</small>
+
+      <button type="button" onclick="nextStep(2)">➡️ Siguiente</button>
     </div>
 
     <!-- Paso 3 -->
     <div class="form-step">
-      <label>Lugar de Nacimiento:</label>
-      <select id="lugarNacimiento" multiple required>
-        <option value="La Paz">La Paz</option>
-        <option value="Cochabamba">Cochabamba</option>
-        <option value="Santa Cruz">Santa Cruz</option>
-        <option value="Oruro">Oruro</option>
-        <option value="Potosí">Potosí</option>
-        <option value="Tarija">Tarija</option>
-        <option value="Chuquisaca">Chuquisaca</option>
-        <option value="Beni">Beni</option>
-        <option value="Pando">Pando</option>
-      </select>
+      <h2>📍 Paso 3: Lugar de Origen y Residencia</h2>
 
-      <label>Lugar de Residencia:</label>
-      <select id="lugarResidencia" multiple required>
-        <option value="La Paz">La Paz</option>
-        <option value="Cochabamba">Cochabamba</option>
-        <option value="Santa Cruz">Santa Cruz</option>
-        <option value="Oruro">Oruro</option>
-        <option value="Potosí">Potosí</option>
-        <option value="Tarija">Tarija</option>
-        <option value="Chuquisaca">Chuquisaca</option>
-        <option value="Beni">Beni</option>
-        <option value="Pando">Pando</option>
+      <label for="lugarNacimiento">Lugar de Nacimiento</label>
+      <select id="lugarNacimiento" required>
+        <option value="">Seleccione...</option>
+        <option>La Paz</option><option>Cochabamba</option><option>Santa Cruz</option>
+        <option>Oruro</option><option>Potosí</option><option>Tarija</option>
+        <option>Chuquisaca</option><option>Beni</option><option>Pando</option>
       </select>
+      <small>Elija el departamento donde nació.</small>
 
-      <button type="button" onclick="nextStep(3)">Siguiente</button>
+      <label for="lugarResidencia">Lugar de Residencia</label>
+      <select id="lugarResidencia" required>
+        <option value="">Seleccione...</option>
+        <option>La Paz</option><option>Cochabamba</option><option>Santa Cruz</option>
+        <option>Oruro</option><option>Potosí</option><option>Tarija</option>
+        <option>Chuquisaca</option><option>Beni</option><option>Pando</option>
+      </select>
+      <small>Seleccione el departamento donde vive actualmente.</small>
+
+      <button type="button" onclick="nextStep(3)">➡️ Siguiente</button>
     </div>
 
     <!-- Paso 4 -->
     <div class="form-step">
-      <input type="text" id="celular" placeholder="Número de Celular" required>
-      <label for="boucher">Subir Boucher (PDF):</label>
-      <input type="file" id="boucher" accept="application/pdf" required>
-      <button type="button" id="btnGenerar" onclick="generarMatricula()">Generar Matrícula</button>
+      <h2>📞 Paso 4: Contacto y Matrícula</h2>
+      <label for="celular">Número de Celular</label>
+      <input type="text" id="celular" placeholder="Ej: 78945612" required>
+      <small>Ingrese un número válido para recibir notificaciones.</small>
 
+      <button type="button" id="btnGenerar" onclick="generarMatricula()">🎖️ Generar Matrícula</button>
       <div id="matriculaDisplay"></div>
-      <button type="button" id="btnSubir" onclick="subirDatos()">Subir Datos</button>
-      <div id="mensajeCarga"></div>
-    </div>
 
+      <!-- Enlace a Google Forms -->
+      <div id="mensajeCarga">
+        <p>Después de generar tu matrícula, debes subir un solo archivo PDF que contenga tu <b>Boucher de pago</b> y tu <b>Cédula de Identidad</b>.</p>
+        <a href="https://forms.gle/oNsa8L1ZFPCcQNxH7" target="_blank">📄 Subir Documentos</a>
+      </div>
+
+      <!-- Mensaje de error -->
+      <div id="errorMatricula"></div>
+
+      <button type="button" id="btnSubir" onclick="subirDatos()">📤 Enviar Datos</button>
+    </div>
   </form>
 </div>
 
@@ -157,9 +209,7 @@ function nextStep(current){
   const inputs = currentStep.querySelectorAll('input, select');
   let allFilled = true;
   inputs.forEach(input=>{
-    if(input.type==="file" && input.files.length===0) allFilled=false;
-    else if(input.value===""||input.value===null) allFilled=false;
-    if(input.multiple && input.selectedOptions.length===0) allFilled=false;
+    if(input.value===""||input.value===null) allFilled=false;
   });
 
   if(!allFilled){
@@ -174,9 +224,6 @@ function nextStep(current){
   // Cambiar fondo
   fondoIndex = (fondoIndex +1) % fondos.length;
   document.body.style.backgroundImage = `url('${fondos[fondoIndex]}')`;
-  document.body.style.backgroundSize = "cover";
-  document.body.style.backgroundPosition = "center";
-  document.body.style.backgroundRepeat = "no-repeat";
 }
 
 function generarMatricula(){
@@ -184,19 +231,24 @@ function generarMatricula(){
   const ci = document.getElementById('ci').value.trim();
   if(apellido && ci.length>=4){
     const matricula = apellido.charAt(0).toUpperCase() + '-' + ci.slice(-4);
-    document.getElementById('matriculaDisplay').innerText = 'Matrícula: ' + matricula;
+    document.getElementById('matriculaDisplay').innerText = '🎖️ Tu Matrícula es: ' + matricula;
     document.getElementById('matricula').value = matricula;
+
+    // Mostrar mensaje con enlace
+    document.getElementById('mensajeCarga').style.display='block';
+    document.getElementById('errorMatricula').style.display='none';
   } else {
-    alert('Completa Apellido Paterno y C.I. correctamente.');
+    alert('⚠️ Completa Apellido Paterno y C.I. correctamente.');
   }
 }
 
 function subirDatos(){
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaZHrDc3cHlhpXw81mBfTBiN-4W6TV1rUn4WgvP8gfQ5CivDBxo1rQWcJTyJjvTcPI6Q/exec"; // Reemplaza con tu URL de Apps Script
-
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwqoBNKe5YL_Egc6CQ4nCrarLzbTawKS8YB3oHNux-7_oEgCi3SSveiR8nVKI7PQhx59g/exec"; 
   const btnSubir = document.getElementById('btnSubir');
-  btnSubir.style.display = 'none';
-  document.getElementById('mensajeCarga').innerText = '⏳ Cargando datos...';
+  const errorDiv = document.getElementById('errorMatricula');
+
+  btnSubir.disabled = true;
+  btnSubir.innerText = "⏳ Enviando datos...";
 
   const fechaActual = new Date().toISOString().slice(0,10);
   const formData = new FormData();
@@ -206,33 +258,34 @@ function subirDatos(){
   formData.append('ci', document.getElementById('ci').value);
   formData.append('fechaNacimiento', document.getElementById('fechaNacimiento').value);
   formData.append('edad', document.getElementById('edad').value);
-  formData.append('lugarNacimiento', Array.from(document.getElementById('lugarNacimiento').selectedOptions).map(o=>o.value).join(', '));
-  formData.append('lugarResidencia', Array.from(document.getElementById('lugarResidencia').selectedOptions).map(o=>o.value).join(', '));
+  formData.append('lugarNacimiento', document.getElementById('lugarNacimiento').value);
+  formData.append('lugarResidencia', document.getElementById('lugarResidencia').value);
   formData.append('celular', document.getElementById('celular').value);
   formData.append('matricula', document.getElementById('matricula').value);
-  formData.append('boucher', document.getElementById('boucher').files[0]);
   formData.append('fechaInscripcion', fechaActual);
 
-  fetch(SCRIPT_URL,{
-    method: 'POST',
-    body: formData
-  })
-  .then(response=>response.json())
-  .then(data=>{
+  fetch(SCRIPT_URL, { method: 'POST', body: formData })
+  .then(response => response.json())
+  .then(data => {
     if(data.status==="OK"){
-      document.getElementById('mensajeCarga').innerHTML = 
-        '✅ Datos enviados correctamente<br>📂 <a href="'+data.link+'" target="_blank">Ver Boucher</a>';
+      errorDiv.style.display='none';
+      alert('✅ Datos enviados correctamente');
     } else {
-      document.getElementById('mensajeCarga').innerText = '❌ Error: '+data.message;
-      btnSubir.style.display='block';
+      errorDiv.innerText = data.message;
+      errorDiv.style.display='block';
+      btnSubir.disabled = false;
+      btnSubir.innerText = "📤 Enviar Datos";
     }
   })
   .catch(err=>{
-    document.getElementById('mensajeCarga').innerText = '❌ Error al enviar los datos';
-    btnSubir.style.display='block';
+    errorDiv.innerText = '❌ Error al enviar los datos';
+    errorDiv.style.display='block';
     console.error(err);
+    btnSubir.disabled = false;
+    btnSubir.innerText = "📤 Enviar Datos";
   });
 }
 </script>
 </body>
 </html>
+
