@@ -11,20 +11,23 @@
     height: 100%;
     width: 100%;
   }
+
+  /* Fondo por defecto: ORDENADOR */
   body {
-    background: url("IMG/ESCULA NAVAL MILITAR PRE-FACULTATIVO.jpg") no-repeat center center;
-    background-size: cover; /* hace que se ajuste en cualquier pantalla */
+    background: url("IMG2/pc.jpg") no-repeat center center;
+    background-size: cover; /* se ajusta en cualquier pantalla */
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
   }
 
-  /* Para celulares */
+  /* Fondo para CELULARES */
   @media (max-width: 768px) {
     body {
-      background-attachment: scroll; /* evita que se corte en móviles */
-      background-position: center top;
+      background: url("IMG2/cel.jpg") no-repeat center center;
+      background-size: 100% 100%; /* se ajusta EXACTO al tamaño de pantalla */
+      background-attachment: scroll; 
     }
   }
 </style>
@@ -32,6 +35,4 @@
 <body onclick="window.location.href='registr.html';">
 </body>
 </html>
-
-
 
