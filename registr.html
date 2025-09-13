@@ -1,3 +1,4 @@
+
 <!-- registro.html -->
 <!DOCTYPE html>
 <html lang="es">
@@ -13,7 +14,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url('IMG/1M.jpeg') center/cover no-repeat;
+    background: url('IMG2/1M.jpg') center/cover no-repeat; /* fondo inicial corregido */
     transition: background 0.5s ease;
     padding: 20px;
   }
@@ -198,7 +199,8 @@
 <input type="hidden" id="matricula">
 
 <script>
-const fondos = ["IMG/1M.jpeg","IMG/2M.jpeg","IMG/3M.jpeg","IMG/4M.jpeg"];
+// ✅ Corrección: ahora apunta a la carpeta correcta "IMG2" y extensión ".jpg"
+const fondos = ["IMG2/1M.jpg","IMG2/2M.jpg","IMG2/3M.jpg","IMG2/4M.jpg"];
 let fondoIndex = 0;
 
 function nextStep(current){
@@ -224,6 +226,7 @@ function nextStep(current){
   // Cambiar fondo
   fondoIndex = (fondoIndex +1) % fondos.length;
   document.body.style.backgroundImage = `url('${fondos[fondoIndex]}')`;
+  document.body.style.backgroundSize = "cover"; 
 }
 
 function generarMatricula(){
