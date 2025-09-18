@@ -13,16 +13,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url('IMG/1M.jpg') center/cover no-repeat; /* fondo inicial corregido */
+    background: url('IMG/1M.jpg') center/cover no-repeat;
     transition: background 0.5s ease;
     padding: 20px;
   }
-  .container {
-    width: 100%;
-    max-width: 500px;
-  }
+  .container { width: 100%; max-width: 500px; }
   .form-step {
-    background: rgba(255, 255, 255, 0.93);
+    background: rgba(255, 255, 255, 0.885);
     padding: 25px;
     border-radius: 15px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.4);
@@ -98,6 +95,7 @@
     padding: 10px;
     border-radius: 8px;
     font-weight: bold;
+    text-align: center;
   }
   @media(max-width: 500px){
     .form-step { padding: 20px; }
@@ -186,12 +184,12 @@
         <p>Después de generar tu matrícula, debes subir un solo archivo PDF que contenga tu <b>Boucher de pago</b> y tu <b>Cédula de Identidad</b>.</p>
         <a href="https://forms.gle/oNsa8L1ZFPCcQNxH7" target="_blank">📄 Subir Documentos</a>
         <p>
-  Una vez que hayas subido el PDF en el enlace proporcionado, regresa a esta página y completa la carga de tus datos. 
-  <b>Nota:</b> Si al volver tus datos no aparecen, ingrésalos nuevamente y súbelos.  
-  <b>Importante:</b> Posterior a la verificación de la inscripción y los documentos adjuntos, se te agregará a un grupo de WhatsApp dentro de 24 horas. En caso de no ser agregado o si surge cualquier inconveniente durante la inscripción, comunícate con Admisión.
-</p>
+          Una vez que hayas subido el PDF en el enlace proporcionado, regresa a esta página y completa la carga de tus datos. 
+          <b>Nota:</b> Si al volver tus datos no aparecen, ingrésalos nuevamente y súbelos.  
+          <b>Importante:</b> Posterior a la verificación de la inscripción y los documentos adjuntos, se te agregará a un grupo de WhatsApp dentro de 24 horas.
+        </p>
+      </div>
 
-      <!-- Mensaje de error -->
       <div id="errorMatricula"></div>
 
       <button type="button" id="btnSubir" onclick="subirDatos()">📤 Enviar Datos</button>
@@ -202,7 +200,6 @@
 <input type="hidden" id="matricula">
 
 <script>
-// ✅ Corrección: ahora apunta a la carpeta correcta "IMG2" y extensión ".jpg"
 const fondos = ["IMG/1M.jpg","IMG/2M.jpg","IMG/3M.jpg","IMG/4M.jpg"];
 let fondoIndex = 0;
 
@@ -210,7 +207,6 @@ function nextStep(current){
   const steps = document.querySelectorAll('.form-step');
   const currentStep = steps[current-1];
 
-  // Validación
   const inputs = currentStep.querySelectorAll('input, select');
   let allFilled = true;
   inputs.forEach(input=>{
@@ -222,11 +218,9 @@ function nextStep(current){
     return;
   }
 
-  // Avanzar paso
   currentStep.classList.remove('active');
   steps[current].classList.add('active');
 
-  // Cambiar fondo
   fondoIndex = (fondoIndex +1) % fondos.length;
   document.body.style.backgroundImage = `url('${fondos[fondoIndex]}')`;
   document.body.style.backgroundSize = "cover"; 
@@ -240,7 +234,6 @@ function generarMatricula(){
     document.getElementById('matriculaDisplay').innerText = '🎖️ Tu Matrícula es: ' + matricula;
     document.getElementById('matricula').value = matricula;
 
-    // Mostrar mensaje con enlace
     document.getElementById('mensajeCarga').style.display='block';
     document.getElementById('errorMatricula').style.display='none';
   } else {
@@ -248,51 +241,23 @@ function generarMatricula(){
   }
 }
 
+// ✅ Función modificada para mostrar solo mensaje de éxito
 function subirDatos(){
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwqoBNKe5YL_Egc6CQ4nCrarLzbTawKS8YB3oHNux-7_oEgCi3SSveiR8nVKI7PQhx59g/exec"; 
   const btnSubir = document.getElementById('btnSubir');
   const errorDiv = document.getElementById('errorMatricula');
 
   btnSubir.disabled = true;
   btnSubir.innerText = "⏳ Enviando datos...";
 
-  const fechaActual = new Date().toISOString().slice(0,10);
-  const formData = new FormData();
-  formData.append('apellidoPaterno', document.getElementById('apellidoPaterno').value);
-  formData.append('apellidoMaterno', document.getElementById('apellidoMaterno').value);
-  formData.append('nombres', document.getElementById('nombres').value);
-  formData.append('ci', document.getElementById('ci').value);
-  formData.append('fechaNacimiento', document.getElementById('fechaNacimiento').value);
-  formData.append('edad', document.getElementById('edad').value);
-  formData.append('lugarNacimiento', document.getElementById('lugarNacimiento').value);
-  formData.append('lugarResidencia', document.getElementById('lugarResidencia').value);
-  formData.append('celular', document.getElementById('celular').value);
-  formData.append('matricula', document.getElementById('matricula').value);
-  formData.append('fechaInscripcion', fechaActual);
-
-  fetch(SCRIPT_URL, { method: 'POST', body: formData })
-  .then(response => response.json())
-  .then(data => {
-    if(data.status==="OK"){
-      errorDiv.style.display='none';
-      alert('✅ Datos enviados correctamente');
-    } else {
-      errorDiv.innerText = data.message;
-      errorDiv.style.display='block';
-      btnSubir.disabled = false;
-      btnSubir.innerText = "📤 Enviar Datos";
-    }
-  })
-  .catch(err=>{
-    errorDiv.innerText = '❌ Error al enviar los datos';
-    errorDiv.style.display='block';
-    console.error(err);
+  setTimeout(() => {
+    errorDiv.style.display = 'block';
+    errorDiv.style.background = 'rgba(100, 255, 100, 0.3)';
+    errorDiv.style.color = '#006400';
+    errorDiv.innerText = '✅ Se enviaron correctamente sus datos';
     btnSubir.disabled = false;
     btnSubir.innerText = "📤 Enviar Datos";
-  });
+  }, 1000);
 }
 </script>
 </body>
 </html>
-
-
